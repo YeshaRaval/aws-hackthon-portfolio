@@ -1,0 +1,166 @@
+{
+  "owner": "Yesha Raval",
+  "about": "Software engineer building practical AI and cloud solutions. B.Tech in AI/ML from Thakur College of Engineering and Technology, Mumbai (May 2025, CGPA 9.57/10). M.Sc. in Data Science in progress at BHT Berlin.",
+  "items": [
+    {
+      "id": "project_travel_ai",
+      "type": "project",
+      "title": "Travel AI – Dream Trip Planned by AI",
+      "domain": "Travel planning",
+      "stack": ["Next.js", "Azure Cosmos DB", "OpenWeatherMap API", "OpenAI API"],
+      "year": "2025",
+      "summary": "An AI trip planner built with Next.js that uses the OpenAI API and OpenWeatherMap data, with Azure Cosmos DB for storage. [Add one sentence on what the user gets and one result.]",
+      "url": "[live demo url]"
+    },
+    {
+      "id": "project_mediportal",
+      "type": "project",
+      "title": "MediPortal – Healthcare Management",
+      "domain": "Healthcare",
+      "stack": ["Next.js", "TypeScript", "Tailwind CSS", "OpenAI API"],
+      "year": "2024",
+      "summary": "A healthcare management web app built with Next.js, TypeScript and Tailwind CSS, using the OpenAI API. [Add one sentence on who it is for and one result.]",
+      "url": "https://medical-portal-beta.vercel.app/"
+    },
+    {
+      "id": "project_formuladash",
+      "type": "project",
+      "title": "FormulaDash – F1 Analytics",
+      "domain": "F1 analytics",
+      "stack": ["Python", "Streamlit", "Plotly", "Streamlit Cloud"],
+      "year": "2025",
+      "summary": "An F1 analytics dashboard built with Python, Streamlit and Plotly and hosted on Streamlit Cloud. [Add the data source and one result.]",
+      "url": "https://formula-dash.streamlit.app/"
+    },
+    {
+      "id": "project_aastha_billing",
+      "type": "project",
+      "title": "Billing & Dashboard – Aastha Apparel Atelier",
+      "domain": "Retail billing",
+      "stack": ["Next.js", "PDF generation", "Cloud hosting"],
+      "year": "2024",
+      "summary": "A billing and dashboard application for Aastha Apparel Atelier, built with Next.js, with PDF generation for invoices. [Add one result, such as time saved.]",
+      "url": "[live demo url]"
+    },
+    {
+      "id": "project_statsense",
+      "type": "project",
+      "title": "StatSense – Automated EDA",
+      "domain": "Data analytics",
+      "stack": ["Python", "Streamlit", "Scikit-learn", "Matplotlib"],
+      "year": "2023",
+      "summary": "A Streamlit tool for automated exploratory data analysis, built with Python, Scikit-learn and Matplotlib. [Add what it outputs and one result.]",
+      "url": "[live demo url]"
+    },
+    {
+      "id": "research_gate_dehaze",
+      "type": "research",
+      "title": "GATE-Dehaze: A GAN-attention-transformer ensemble for satellite image dehazing",
+      "domain": "Remote sensing",
+      "stack": ["GAN", "Attention", "Transformer"],
+      "year": "2026",
+      "summary": "Led GATE-DehazNet, a satellite image dehazing model combining GANs, attention and transformers that outperforms baselines. Accepted for publication in the Turkish Journal of Remote Sensing (Scopus indexed).",
+      "url": "https://dergipark.org.tr/en/pub/tuzal"
+    },
+    {
+      "id": "cert_ai_practitioner",
+      "type": "certification",
+      "title": "AWS Certified AI Practitioner",
+      "domain": "Foundational",
+      "stack": ["AWS"],
+      "year": "May 2025",
+      "summary": "Foundational AWS certification covering AI and machine learning concepts.",
+      "url": "https://www.credly.com/users/yesha-raval.446f6baf/badges#credly"
+    },
+    {
+      "id": "cert_solutions_architect",
+      "type": "certification",
+      "title": "AWS Certified Solutions Architect – Associate",
+      "domain": "Associate",
+      "stack": ["AWS"],
+      "year": "Jan 2026",
+      "summary": "Associate-level AWS certification for designing cloud architectures.",
+      "url": "https://www.credly.com/users/yesha-raval.446f6baf/badges#credly"
+    },
+    {
+      "id": "cert_developer",
+      "type": "certification",
+      "title": "AWS Certified Developer – Associate",
+      "domain": "Associate",
+      "stack": ["AWS"],
+      "year": "Feb 2026",
+      "summary": "Associate-level AWS certification for developing and deploying cloud applications.",
+      "url": "https://www.credly.com/users/yesha-raval.446f6baf/badges#credly"
+    },
+    {
+      "id": "skills_languages",
+      "type": "skill",
+      "title": "Programming Languages",
+      "domain": "Programming",
+      "stack": ["HTML", "CSS", "JavaScript", "Python", "Java", "SQL"],
+      "year": "",
+      "summary": "Languages used across projects."
+    },
+    {
+      "id": "skills_ai_ml",
+      "type": "skill",
+      "title": "AI/ML",
+      "domain": "Artificial intelligence",
+      "stack": ["Machine Learning", "Deep Learning", "NLP", "Computer Vision", "GANs"],
+      "year": "",
+      "summary": "Core AI and machine learning areas."
+    },
+    {
+      "id": "skills_frameworks",
+      "type": "skill",
+      "title": "Frameworks & Libraries",
+      "domain": "Development",
+      "stack": ["TensorFlow", "PyTorch", "OpenCV", "Scikit-learn"],
+      "year": "",
+      "summary": "ML and computer vision libraries."
+    },
+    {
+      "id": "skills_web_tools",
+      "type": "skill",
+      "title": "Web & Tools",
+      "domain": "Web development",
+      "stack": ["Next.js", "React.js", "REST APIs", "Git", "GitHub"],
+      "year": "",
+      "summary": "Web development stack and tooling."
+    },
+    {
+      "id": "skills_aws",
+      "type": "skill",
+      "title": "AWS",
+      "domain": "Cloud",
+      "stack": ["EC2", "ELB", "Auto Scaling", "S3", "Amazon VPC", "Lambda", "API Gateway", "Cognito", "Amazon Bedrock", "Amazon SageMaker"],
+      "year": "",
+      "summary": "AWS services used for cloud-native AI applications."
+    },
+    {
+      "id": "skills_databases",
+      "type": "skill",
+      "title": "Databases",
+      "domain": "Data storage",
+      "stack": ["MySQL", "MongoDB", "Redis"],
+      "year": "",
+      "summary": "Databases used across projects."
+    },
+    {
+      "id": "about_origin",
+      "type": "about",
+      "title": "Mumbai → Berlin",
+      "domain": "About",
+      "stack": [],
+      "year": "2025",
+      "summary": "B.Tech in AI/ML in Mumbai, now an M.Sc. in Data Science in Berlin."
+    }
+  ],
+  "contact": {
+    "email": "yesha.raval04@gmail.com",
+    "linkedin": "[linkedin url]",
+    "github": "[github url]",
+    "twitter": "@yesharaval",
+    "status": "available"
+  }
+}
