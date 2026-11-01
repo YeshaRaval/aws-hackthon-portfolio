@@ -143,7 +143,7 @@ function PortfolioBrowser({
               key={item}
               type="button"
               aria-pressed={view === item}
-              className={`folder-browser__control${view === item ? " folder-browser__control--active" : ""}`}
+              className={`folder-browser__control${view === item ? " folder-browser__control--active" : ""}${item !== "cards" ? " hidden sm:inline-flex" : ""}`}
               onClick={() => onViewChange(item)}
             >
               {item === "raw" ? "CSV" : item === "cards" ? "Cards" : "Table"}
@@ -352,7 +352,10 @@ export default function PortfolioExperience({ route = "home" }: { route?: Portfo
   const [activeNavId, setActiveNavId] = useState<"files" | "charts" | "role-fit">(route === "research" ? "charts" : route === "skills" ? "role-fit" : "files");
   const [activeFolderId, setActiveFolderId] = useState<FolderId>(routeDefault?.folder ?? "projects-folder");
   const [activeFilter, setActiveFilter] = useState<FileFilter>(routeDefault?.filter ?? "all");
-  const [fileView, setFileView] = useState<FileView>("table");
+  // Default to cards on mobile (< 640px), table on desktop
+  const [fileView, setFileView] = useState<FileView>(() =>
+    typeof window !== "undefined" && window.innerWidth < 640 ? "cards" : "table"
+  );
   const loaderRef = useRef<HTMLDivElement>(null);
   const homeHeadingRef = useRef<HTMLHeadingElement>(null);
   const timerRef = useRef<number | null>(null);
@@ -381,7 +384,7 @@ export default function PortfolioExperience({ route = "home" }: { route?: Portfo
     if (openingTimerRef.current !== null) clearTimeout(openingTimerRef.current);
     setActiveFolderId(folderId);
     setActiveFilter(filter);
-    setFileView("table");
+    setFileView(typeof window !== "undefined" && window.innerWidth < 640 ? "cards" : "table");
     setActiveNavId(navId);
     setScreen("opening");
 
