@@ -35,14 +35,17 @@ export function FolderPageTransition({
   folderName,
   title,
   children,
+  skip = false,
 }: {
   folderName: string;
   title?: string;
   children: React.ReactNode;
+  skip?: boolean;
 }) {
-  const [opening, setOpening] = useState(true);
+  const [opening, setOpening] = useState(!skip);
 
   useEffect(() => {
+    if (skip) return;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reducedMotion) {
       setOpening(false);
@@ -50,7 +53,7 @@ export function FolderPageTransition({
     }
     const timer = window.setTimeout(() => setOpening(false), ANIMATION_DURATION_MS);
     return () => clearTimeout(timer);
-  }, []);
+  }, [skip]);
 
   if (opening) {
     return (

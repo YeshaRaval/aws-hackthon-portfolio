@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import PortfolioHeader from "./portfolio-header";
 import { FolderOpeningScreen } from "./folder-opening-screen";
+import { FolderPageTransition } from "./folder-opening-screen";
 
 const LOADER_SESSION_KEY = "yesha-portfolio-loader-complete";
 const LOADER_DURATION_MS = 650;
@@ -138,15 +139,15 @@ function PortfolioBrowser({
         </div>
 
         <div className="flex items-center gap-1" role="group" aria-label="File display mode">
-          {(["table", "cards", "raw"] as const).map((item) => (
+          {(["cards", "raw"] as const).map((item) => (
             <button
               key={item}
               type="button"
               aria-pressed={view === item}
-              className={`folder-browser__control${view === item ? " folder-browser__control--active" : ""}${item !== "cards" ? " hidden sm:inline-flex" : ""}`}
+              className={`folder-browser__control${view === item ? " folder-browser__control--active" : ""}`}
               onClick={() => onViewChange(item)}
             >
-              {item === "raw" ? "CSV" : item === "cards" ? "Cards" : "Table"}
+              {item === "raw" ? "CSV" : "Cards"}
             </button>
           ))}
         </div>
@@ -352,10 +353,8 @@ export default function PortfolioExperience({ route = "home" }: { route?: Portfo
   const [activeNavId, setActiveNavId] = useState<"files" | "charts" | "role-fit">(route === "research" ? "charts" : route === "skills" ? "role-fit" : "files");
   const [activeFolderId, setActiveFolderId] = useState<FolderId>(routeDefault?.folder ?? "projects-folder");
   const [activeFilter, setActiveFilter] = useState<FileFilter>(routeDefault?.filter ?? "all");
-  // Default to cards on mobile (< 640px), table on desktop
-  const [fileView, setFileView] = useState<FileView>(() =>
-    typeof window !== "undefined" && window.innerWidth < 640 ? "cards" : "table"
-  );
+  // Default to cards always (table view removed)
+  const [fileView, setFileView] = useState<FileView>("cards");
   const loaderRef = useRef<HTMLDivElement>(null);
   const homeHeadingRef = useRef<HTMLHeadingElement>(null);
   const timerRef = useRef<number | null>(null);
@@ -384,7 +383,7 @@ export default function PortfolioExperience({ route = "home" }: { route?: Portfo
     if (openingTimerRef.current !== null) clearTimeout(openingTimerRef.current);
     setActiveFolderId(folderId);
     setActiveFilter(filter);
-    setFileView(typeof window !== "undefined" && window.innerWidth < 640 ? "cards" : "table");
+    setFileView("cards");
     setActiveNavId(navId);
     setScreen("opening");
 
@@ -567,14 +566,20 @@ export default function PortfolioExperience({ route = "home" }: { route?: Portfo
           {screen === "opening" && <FolderOpeningScreen folderName={activeFolder.name} />}
 
           {screen === "browser" && (
-            <PortfolioBrowser
-              filter={activeFilter}
-              view={fileView}
-              rows={visibleFiles}
-              onFilterChange={changeFileFilter}
-              onViewChange={setFileView}
-              onNavigate={(path) => router.push(path)}
-            />
+            <FolderPageTransition
+              folderName={`portfolio/${activeFilter === "all" ? "files" : activeFilter === "cert" ? "certifications" : `${activeFilter}s`}`}
+              title={`Opening ${activeFilter === "all" ? "files" : activeFilter === "cert" ? "certifications" : `${activeFilter}s`}...`}
+              skip={!isHomeRoute}
+            >
+              <PortfolioBrowser
+                filter={activeFilter}
+                view={fileView}
+                rows={visibleFiles}
+                onFilterChange={changeFileFilter}
+                onViewChange={setFileView}
+                onNavigate={(path) => router.push(path)}
+              />
+            </FolderPageTransition>
           )}
         </div>
       </main>
