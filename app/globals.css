@@ -1343,3 +1343,191 @@ a.folder-action:active {
   white-space: pre-wrap;
   word-break: break-word;
 }
+
+/* ── Assistant: thinking steps ──────────────────────────────────────────── */
+.assistant-thinking-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  border: 1.5px solid #283149;
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  background: #fffdf4;
+  font-family: var(--font-geist-mono), monospace;
+  margin-bottom: 0.25rem;
+}
+
+.assistant-thinking-step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.35;
+  transition: opacity 300ms ease;
+}
+
+.assistant-thinking-step--active {
+  opacity: 1;
+}
+
+.assistant-thinking-step__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid #283149;
+  background: #283149;
+  flex: none;
+}
+
+/* ── Assistant: source badges ───────────────────────────────────────────── */
+.assistant-sources {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed #283149;
+  font-family: var(--font-geist-mono), monospace;
+}
+
+.assistant-sources__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #45516b;
+  margin-right: 0.2rem;
+}
+
+.assistant-source-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1.5px solid #283149;
+  border-radius: 7px;
+  padding: 0.2rem 0.6rem 0.2rem 0.45rem;
+  background: #ffce63;
+  color: #283149;
+  text-decoration: none;
+  font-size: 0.72rem;
+  font-weight: 700;
+  transition: background 140ms ease, transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.assistant-source-badge:hover {
+  background: #283149;
+  color: #fff7e6;
+  transform: translateY(-1px);
+}
+
+.assistant-source-badge__icon {
+  flex: none;
+  display: flex;
+  align-items: center;
+}
+
+/* ── Mobile bottom navigation ───────────────────────────────────────────── */
+.mobile-bottom-nav {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  border-top: 2px solid #283149;
+  background: #fff7e6;
+  box-shadow: 0 -3px 0 #283149;
+}
+
+.mobile-bottom-nav__link {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 0.6rem 0.25rem 0.55rem;
+  color: #283149;
+  text-decoration: none;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  transition: background 140ms ease;
+}
+
+.mobile-bottom-nav__link--active {
+  background: #ffce63;
+}
+
+.mobile-bottom-nav__icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.mobile-bottom-nav__label {
+  letter-spacing: 0.02em;
+}
+
+/* ── Mobile FAB (floating assistant button) ─────────────────────────────── */
+.mobile-fab {
+  position: fixed;
+  bottom: 4.5rem;
+  right: 1.25rem;
+  z-index: 41;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid #283149;
+  background: #ff8f56;
+  box-shadow: 3px 3px 0 #283149;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 180ms ease;
+}
+
+.mobile-fab:hover {
+  transform: translateY(-3px) scale(1.06);
+  box-shadow: 5px 5px 0 #283149;
+}
+
+/* Hide mobile nav and FAB on tablet+ */
+@media (min-width: 640px) {
+  .mobile-bottom-nav,
+  .mobile-fab {
+    display: none;
+  }
+}
+
+/* ── Mobile table — horizontal scroll ──────────────────────────────────── */
+@media (max-width: 639px) {
+  /* Wrap the table in a scroll container */
+  .folder-browser__content {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .folder-file-table {
+    font-size: 0.72rem;
+    min-width: 580px; /* ensures columns stay readable, scroll kicks in below this */
+  }
+
+  .folder-file-table th,
+  .folder-file-table td {
+    padding: 0.5rem 0.4rem;
+    white-space: nowrap;
+  }
+
+  /* Hide the spreadsheet letter row on mobile — saves space */
+  .folder-file-table__letters {
+    display: none;
+  }
+
+  /* Page padding for bottom nav */
+  main {
+    padding-bottom: 5rem;
+  }
+}

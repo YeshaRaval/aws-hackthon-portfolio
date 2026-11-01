@@ -16,7 +16,8 @@ export default function PortfolioHeader() {
         </span>
       </Link>
 
-      <nav aria-label="Main navigation" className="flex flex-wrap items-center gap-x-3 gap-y-3">
+      {/* Desktop nav — hidden on mobile, shown sm+ */}
+      <nav aria-label="Main navigation" className="hidden sm:flex flex-wrap items-center gap-x-3 gap-y-3">
         <Link href="/about" className="folder-action">About</Link>
         <Link href="/files" className="folder-action">Files</Link>
         <Link href="/contact" className="folder-action">Contact</Link>

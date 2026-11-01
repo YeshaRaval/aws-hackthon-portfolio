@@ -17,54 +17,60 @@ type Message =
   | { role: "user"; text: string }
   | { role: "assistant"; text: string; done: boolean };
 
-/** Splits text into plain segments and URL segments, renders URLs as links. */
-function renderText(text: string): React.ReactNode[] {
-  const urlRegex = /(https?:\/\/[^\s,)\]]+)/g;
-  const parts = text.split(urlRegex);
-
-  return parts.map((part, i) => {
-    if (urlRegex.test(part)) {
-      // Reset lastIndex after test() consumed it
-      urlRegex.lastIndex = 0;
-      // Trim trailing punctuation that got caught (e.g. trailing period)
-      const clean = part.replace(/[.,!?)]+$/, "");
-      const trailing = part.slice(clean.length);
-      let label = clean;
-      try {
-        const u = new URL(clean);
-        // Show just hostname + short path as label
-        label = u.hostname + (u.pathname !== "/" ? u.pathname.replace(/\/$/, "") : "");
-      } catch { /* keep full URL as label */ }
-
-      return (
-        <span key={i}>
-          <a
-            href={clean}
-            target="_blank"
-            rel="noreferrer"
-            className="assistant-link"
-          >
-            {label} ↗
-          </a>
-          {trailing}
-        </span>
-      );
-    }
-    urlRegex.lastIndex = 0;
-    return <span key={i}>{part}</span>;
-  });
+/** Extracts https:// URLs from text, returns them deduplicated */
+function extractUrls(text: string): string[] {
+  const matches = text.match(/https?:\/\/[^\s,)\]]+/g) ?? [];
+  const cleaned = matches.map((u) => u.replace(/[.,!?)]+$/, ""));
+  return [...new Set(cleaned)];
 }
+
+/** Strips URLs from text for the main answer body */
+function stripUrls(text: string): string {
+  return text.replace(/https?:\/\/[^\s,)\]]+/g, "").replace(/\s{2,}/g, " ").trim();
+}
+
+/** Short readable label for a URL */
+function urlLabel(url: string): string {
+  try {
+    const u = new URL(url);
+    const path = u.pathname.replace(/\/$/, "");
+    return u.hostname + (path && path !== "/" ? path : "");
+  } catch {
+    return url;
+  }
+}
+
+const THINKING_STEPS = [
+  "Reading the question",
+  "Searching portfolio data",
+  "Composing answer",
+];
 
 export default function AssistantWorkspace() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [thinkingStep, setThinkingStep] = useState(0);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const thinkingTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Animate through thinking steps while loading
+  useEffect(() => {
+    if (loading) {
+      setThinkingStep(0);
+      thinkingTimer.current = setInterval(() => {
+        setThinkingStep((s) => Math.min(s + 1, THINKING_STEPS.length - 1));
+      }, 700);
+    } else {
+      if (thinkingTimer.current) clearInterval(thinkingTimer.current);
+    }
+    return () => { if (thinkingTimer.current) clearInterval(thinkingTimer.current); };
+  }, [loading]);
 
   async function ask(question: string) {
     const q = question.trim();
@@ -134,7 +140,7 @@ export default function AssistantWorkspace() {
 
   return (
     <FolderPageTransition folderName="portfolio/assistant" title="Loading assistant...">
-      <main className="min-h-screen bg-[#fff7e6] px-5 text-[#283149] sm:px-10 lg:px-16">
+      <main className="min-h-screen bg-[#fff7e6] px-5 pb-24 text-[#283149] sm:px-10 sm:pb-8 lg:px-16">
         <div className="mx-auto max-w-[1320px]">
           <PortfolioHeader />
 
@@ -156,30 +162,77 @@ export default function AssistantWorkspace() {
                   </div>
                 )}
 
-                {messages.map((msg, i) => (
-                  <div key={i} className={`assistant-message assistant-message--${msg.role}`}>
-                    {msg.role === "user" ? (
-                      <span className="assistant-bubble assistant-bubble--user">{msg.text}</span>
-                    ) : (
-                      <div className="assistant-bubble assistant-bubble--assistant">
-                        {msg.text ? (
-                          <span className="assistant-text">{renderText(msg.text)}</span>
-                        ) : (
-                          <span className="assistant-thinking" aria-label="Thinking">
-                            <span className="font-mono text-xs text-[#283149]">
-                              <span className="assistant-thinking-dot" />
-                              <span className="assistant-thinking-dot" />
-                              <span className="assistant-thinking-dot" />
-                            </span>
-                          </span>
-                        )}
-                        {msg.role === "assistant" && !msg.done && msg.text && (
-                          <span className="assistant-cursor" aria-hidden="true">▌</span>
-                        )}
+                {messages.map((msg, i) => {
+                  if (msg.role === "user") {
+                    return (
+                      <div key={i} className="assistant-message assistant-message--user">
+                        <span className="assistant-bubble assistant-bubble--user">{msg.text}</span>
                       </div>
-                    )}
-                  </div>
-                ))}
+                    );
+                  }
+
+                  // Assistant message
+                  const isLastMsg = i === messages.length - 1;
+                  const isStreaming = isLastMsg && loading;
+                  const urls = msg.done ? extractUrls(msg.text) : [];
+                  const bodyText = msg.done ? stripUrls(msg.text) : msg.text;
+
+                  return (
+                    <div key={i} className="assistant-message assistant-message--assistant">
+                      <div className="assistant-bubble assistant-bubble--assistant">
+
+                        {/* Thinking steps — shown while streaming with no text yet */}
+                        {isStreaming && !msg.text && (
+                          <div className="assistant-thinking-steps" aria-label="Thinking">
+                            {THINKING_STEPS.map((step, si) => (
+                              <div
+                                key={step}
+                                className={`assistant-thinking-step${si <= thinkingStep ? " assistant-thinking-step--active" : ""}`}
+                              >
+                                <span className="assistant-thinking-step__dot" aria-hidden="true" />
+                                <span className="font-mono text-xs">{step}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Answer body */}
+                        {bodyText ? (
+                          <span className="assistant-text">
+                            {bodyText}
+                            {isStreaming && <span className="assistant-cursor" aria-hidden="true">▌</span>}
+                          </span>
+                        ) : null}
+
+                        {/* Source badges — shown after streaming is done */}
+                        {msg.done && urls.length > 0 && (
+                          <div className="assistant-sources">
+                            <span className="assistant-sources__label">sources:</span>
+                            {urls.map((url) => (
+                              <a
+                                key={url}
+                                href={url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="assistant-source-badge"
+                                aria-label={`Source: ${urlLabel(url)}`}
+                              >
+                                <span className="assistant-source-badge__icon" aria-hidden="true">
+                                  <svg viewBox="0 0 16 12" width="14" height="10" fill="none">
+                                    <rect x="0.5" y="2.5" width="15" height="9" rx="1.5" fill="#ff8f56" stroke="#283149" strokeWidth="1"/>
+                                    <rect x="0.5" y="2.5" width="5.5" height="3" rx="1" fill="#ffce63" stroke="#283149" strokeWidth="1"/>
+                                  </svg>
+                                </span>
+                                <span className="font-mono text-xs font-bold">{urlLabel(url)}</span>
+                              </a>
+                            ))}
+                          </div>
+                        )}
+
+                      </div>
+                    </div>
+                  );
+                })}
                 <div ref={bottomRef} />
               </div>
 
