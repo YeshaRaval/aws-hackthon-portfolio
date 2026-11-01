@@ -17,6 +17,44 @@ type Message =
   | { role: "user"; text: string }
   | { role: "assistant"; text: string; done: boolean };
 
+/** Splits text into plain segments and URL segments, renders URLs as links. */
+function renderText(text: string): React.ReactNode[] {
+  const urlRegex = /(https?:\/\/[^\s,)\]]+)/g;
+  const parts = text.split(urlRegex);
+
+  return parts.map((part, i) => {
+    if (urlRegex.test(part)) {
+      // Reset lastIndex after test() consumed it
+      urlRegex.lastIndex = 0;
+      // Trim trailing punctuation that got caught (e.g. trailing period)
+      const clean = part.replace(/[.,!?)]+$/, "");
+      const trailing = part.slice(clean.length);
+      let label = clean;
+      try {
+        const u = new URL(clean);
+        // Show just hostname + short path as label
+        label = u.hostname + (u.pathname !== "/" ? u.pathname.replace(/\/$/, "") : "");
+      } catch { /* keep full URL as label */ }
+
+      return (
+        <span key={i}>
+          <a
+            href={clean}
+            target="_blank"
+            rel="noreferrer"
+            className="assistant-link"
+          >
+            {label} ↗
+          </a>
+          {trailing}
+        </span>
+      );
+    }
+    urlRegex.lastIndex = 0;
+    return <span key={i}>{part}</span>;
+  });
+}
+
 export default function AssistantWorkspace() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -124,7 +162,9 @@ export default function AssistantWorkspace() {
                       <span className="assistant-bubble assistant-bubble--user">{msg.text}</span>
                     ) : (
                       <div className="assistant-bubble assistant-bubble--assistant">
-                        {msg.text || (
+                        {msg.text ? (
+                          <span className="assistant-text">{renderText(msg.text)}</span>
+                        ) : (
                           <span className="assistant-thinking" aria-label="Thinking">
                             <span className="font-mono text-xs text-[#283149]">
                               <span className="assistant-thinking-dot" />
