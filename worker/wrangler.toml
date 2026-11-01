@@ -1,0 +1,36 @@
+name = "yesha-portfolio-assistant"
+main = "src/index.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+# ── Model configuration ───────────────────────────────────────────────────────
+# Change this to swap models without touching code.
+# Supported values (verify availability in your OpenAI account):
+#   "gpt-4o-mini"   — fast, cheap, good for Q&A (recommended for a portfolio)
+#   "gpt-4o"        — higher quality, higher cost
+#   "gpt-3.5-turbo" — legacy, not recommended for new projects
+[vars]
+OPENAI_MODEL = "gpt-4o-mini"
+
+# CORS: list of origins allowed to call this Worker.
+# Add your actual Amplify and Vercel domains here once deployed.
+# Format: space-separated string parsed in index.ts.
+ALLOWED_ORIGINS = "http://localhost:3000 http://localhost:3001 https://yesha-raval-portfolio.vercel.app https://main.dt39gc242kkyp.amplifyapp.com"
+
+# Maximum characters allowed in a single question (prevents abuse).
+MAX_QUESTION_LENGTH = "500"
+
+# ── KV namespace for rate limiting ───────────────────────────────────────────
+# Create with: wrangler kv namespace create RATE_LIMIT_STORE
+# Then paste the id returned into id below.
+# For local dev: wrangler kv namespace create RATE_LIMIT_STORE --preview
+# and paste that id into preview_id.
+#
+# [[kv_namespaces]]
+# binding = "RATE_LIMIT_STORE"
+# id = "REPLACE_WITH_YOUR_KV_ID"
+# preview_id = "REPLACE_WITH_YOUR_PREVIEW_KV_ID"
+
+# ── Secrets (never stored here — set via wrangler secret put) ────────────────
+# OPENAI_API_KEY  →  wrangler secret put OPENAI_API_KEY

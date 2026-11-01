@@ -1,0 +1,16 @@
+{
+  "name": "yesha-portfolio-assistant-worker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cloudflare Worker — OpenAI-powered portfolio assistant backend",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250430.0",
+    "typescript": "^5.7.0",
+    "wrangler": "^3.99.0"
+  }
+}

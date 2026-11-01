@@ -41,7 +41,7 @@ export default function AssistantWorkspace() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/assistant", {
+      const res = await fetch(process.env.NEXT_PUBLIC_ASSISTANT_URL!, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: q }),
@@ -189,7 +189,7 @@ export default function AssistantWorkspace() {
               </ul>
 
               <p className="assistant-sidebar-note">
-                Powered by Amazon Bedrock. Answers come only from the files in this portfolio, with sources shown.
+                Powered by OpenAI. Answers come only from the content in this portfolio.
               </p>
             </aside>
           </div>
